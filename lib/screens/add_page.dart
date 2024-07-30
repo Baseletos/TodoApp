@@ -1,11 +1,17 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
+import 'package:todo_app/services/todo_service.dart';
+
+import '../utils/snackbar_helper.dart';
 
 class AddTodoPage extends StatefulWidget {
-  const AddTodoPage({super.key});
+  final Map? todo;
+  const AddTodoPage({
+    super.key,
+    this.todo,
+  });
 
   @override
   State<AddTodoPage> createState() => _AddTodoPageState();
@@ -14,90 +20,99 @@ class AddTodoPage extends StatefulWidget {
 class _AddTodoPageState extends State<AddTodoPage> {
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  bool isEdit = false;
   @override
+  void initState() {
+    super.initState();
+    final todo = widget.todo;
+    if (widget.todo != null) {
+      isEdit = true;
+      final title = todo?['title'];
+      final description = todo?['description'];
+      titleController.text = title;
+      descriptionController.text = description;
+    }
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          backgroundColor: Color.fromARGB(255, 43, 50, 71),
-          title: Text('Add Todo'),
+          backgroundColor: const Color.fromARGB(255, 43, 50, 71),
+          title: Text(
+            isEdit ? 'Edit Todo' : 'Add Todo',
+          ),
         ),
         body: ListView(
-          padding: EdgeInsets.all(20),
+          padding: const EdgeInsets.all(20),
           children: [
             TextField(
               controller: titleController,
-              decoration: InputDecoration(hintText: 'Title'),
+              decoration: const InputDecoration(hintText: 'Title'),
             ),
             TextField(
               controller: descriptionController,
-              decoration: InputDecoration(hintText: 'Description'),
+              decoration: const InputDecoration(hintText: 'Description'),
               keyboardType: TextInputType.multiline,
               minLines: 5,
               maxLines: 10,
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 85, 41, 218),
+                  backgroundColor: const Color.fromARGB(255, 85, 41, 218),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                 ),
-                onPressed: submitData,
-                child: Text('submit')),
+                onPressed: isEdit ? updateData : submitData,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    isEdit ? 'Update' : 'submit',
+                  ),
+                )),
           ],
         ));
   }
 
+  Future<void> updateData() async {
+    final todo = widget.todo;
+    if (todo == null) {
+      print('you can not call update without todo data');
+      return;
+    }
+    final id = todo['_id'];
+    
+    final isSuccess = await TodoService.updateTodo(id, body);
+
+    if (isSuccess != null) {
+      showSuccessMessage(context, message: 'Success');
+      Navigator.pop(context);
+    } else {
+      showFailureMessage(context, message: 'Failure');
+    }
+  }
+
   Future<void> submitData() async {
+  
+    final isSuccess = await TodoService.addTodo(body);
+    if (isSuccess != null) {
+      titleController.text = '';
+      descriptionController.text = '';
+      showSuccessMessage(context, message: 'Success');
+       Navigator.pop(context);
+    } else {
+      showFailureMessage(context, message: 'Failure');
+    }
+  }
+
+  Map get body {
     final title = titleController.text;
     final description = descriptionController.text;
-    final body = {
+    return {
       "title": title,
       "description": description,
       "is_complete": false,
     };
-    final url = 'https://api.nstack.in/v1/todos';
-    final uri = Uri.parse(url);
-    final response = await http.post(
-      uri,
-      body: jsonEncode(body),
-      headers: {'Content-Type': 'application/json'},
-    );
-    if (response.statusCode == 201) {
-      titleController.text = '';
-      descriptionController.text = '';
-      print('Success');
-      showSuccessMessage('Success');
-    } else {
-      print('failure');
-      print(response.body);
-      showFailureMessage('Failure');
-    }
-    ;
-  }
-
-  void showSuccessMessage(String message) {
-    final snackBar = SnackBar(
-      content: Text(
-        message,
-        style: TextStyle(color: Colors.black),
-      ),
-      backgroundColor: Colors.white,
-      //duration: Duration(seconds: 1),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
-
-  void showFailureMessage(String message) {
-    final snackBar = SnackBar(
-      content: Text(
-        message,
-        style: TextStyle(color: Colors.white),
-      ),
-      backgroundColor: Colors.red,
-      //duration: Duration(seconds: 1),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
