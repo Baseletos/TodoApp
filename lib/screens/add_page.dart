@@ -1,8 +1,7 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:todo_app/services/todo_service.dart';
+import 'package:http/http.dart' as http;
 
 import '../utils/snackbar_helper.dart';
 
@@ -34,6 +33,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
     }
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -60,7 +60,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
             const SizedBox(height: 20),
             ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color.fromARGB(255, 85, 41, 218),
+                  backgroundColor: const Color.fromARGB(55, 85, 41, 218),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10)),
                 ),
