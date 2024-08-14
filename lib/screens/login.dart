@@ -81,7 +81,7 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
   Widget login_button() {
     return Padding(
       padding: const EdgeInsets.symmetric(
-        horizontal: 300,
+        horizontal: 100,
       ),
       child: Container(
           alignment: Alignment.center,

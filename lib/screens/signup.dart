@@ -89,7 +89,7 @@ class _SignUP_ScreenState extends State<SignUP_Screen> {
   Widget signup_button() {
     return Padding(
               padding: const EdgeInsets.symmetric(
-                horizontal: 300,
+                horizontal: 100,
               ),
               child: Container(
                 alignment: Alignment.center,
