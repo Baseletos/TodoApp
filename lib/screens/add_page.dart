@@ -1,7 +1,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:todo_app/services/todo_service.dart';
-import 'package:http/http.dart' as http;
 
 import '../utils/snackbar_helper.dart';
 

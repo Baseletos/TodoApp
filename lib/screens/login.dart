@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app/data/auth_data.dart';
 
 class LogIN_Screen extends StatefulWidget {
   final VoidCallback show;
-  const LogIN_Screen(this.show,{super.key});
+  const LogIN_Screen(this.show, {super.key});
 
   @override
   State<LogIN_Screen> createState() => _LogIN_ScreenState();
 }
 
 class _LogIN_ScreenState extends State<LogIN_Screen> {
-  FocusNode _focusNode1 = FocusNode();
-  FocusNode _focusNode2 = FocusNode();
+  final FocusNode _focusNode1 = FocusNode();
+  final FocusNode _focusNode2 = FocusNode();
 
   final email = TextEditingController();
   final password = TextEditingController();
@@ -24,21 +25,22 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
           child: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Login(context),
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
             textfield(email, _focusNode1, 'Email', Icons.email),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             textfield(password, _focusNode2, 'Password', Icons.key),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             account(),
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
             login_button()
           ],
         ),
@@ -54,17 +56,17 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Text(
+          const Text(
             "Don't have an account?",
             style: TextStyle(
               color: Colors.white,
               fontSize: 14.0,
             ),
           ),
-          SizedBox(width: 5),
+          const SizedBox(width: 5),
           GestureDetector(
             onTap: widget.show,
-            child: Text(
+            child: const Text(
               "Sign UP",
               style: TextStyle(
                 color: Colors.blue,
@@ -83,25 +85,30 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
       padding: const EdgeInsets.symmetric(
         horizontal: 100,
       ),
-      child: Container(
-          alignment: Alignment.center,
-          width: double.infinity,
-          height: 50,
-          decoration: BoxDecoration(
-            color: Color.fromARGB(255, 89, 58, 113),
-            borderRadius: BorderRadius.circular(120),
-          ),
-          child: Text(
-            'Login',
-            style: TextStyle(
-              fontSize: 23,
-              fontWeight: FontWeight.bold,
+      child: GestureDetector(
+        onTap: () {
+          AuthenticationRemote().login(email.text, password.text);
+        },
+        child: Container(
+            alignment: Alignment.center,
+            width: double.infinity,
+            height: 50,
+            decoration: BoxDecoration(
+              color: const Color.fromARGB(255, 89, 58, 113),
+              borderRadius: BorderRadius.circular(120),
             ),
-          )),
+            child: const Text(
+              'Login',
+              style: TextStyle(
+                fontSize: 23,
+                fontWeight: FontWeight.bold,
+              ),
+            )),
+      ),
     );
   }
 
-  Widget textfield(TextEditingController _controller, FocusNode _focusNode,
+  Widget textfield(TextEditingController controller, FocusNode focusNode,
       String typename, IconData iconss) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 50),
@@ -111,19 +118,20 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
           borderRadius: BorderRadius.circular(120),
         ),
         child: TextField(
-          controller: _controller,
-          focusNode: _focusNode,
-          style: TextStyle(
+          controller: controller,
+          focusNode: focusNode,
+          style: const TextStyle(
             fontSize: 18,
             color: Colors.white,
           ),
           decoration: InputDecoration(
             prefixIcon: Icon(iconss),
-            contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 15),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
             hintText: typename,
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15),
-              borderSide: BorderSide(
+              borderSide: const BorderSide(
                 color: Colors.white,
                 width: 2.0,
               ),
@@ -137,7 +145,7 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
   Widget Login(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
-      child: Container(
+      child: SizedBox(
         width: double.infinity,
         height: 300,
         child: Center(
