@@ -6,7 +6,7 @@ class TodoCard extends StatefulWidget {
   final Function(Map) navigateEdit;
   final Function(String) deleteById;
 
-  TodoCard({
+  const TodoCard({
     super.key,
     required this.index,
     required this.item,
@@ -34,7 +34,7 @@ class _TodoCardState extends State<TodoCard> {
             children: [
               Text(widget.item['description']),
                   Timefield(),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               // Displaying date and time
             ],
           ),
@@ -90,8 +90,8 @@ class _TodoCardState extends State<TodoCard> {
         decoration: BoxDecoration(
             color: const Color.fromARGB(255, 89, 58, 113),
             borderRadius: BorderRadius.circular(18)),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
+        child: const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 12),
           child: Row(
             children: [
               Text(
