@@ -3,7 +3,7 @@ import 'package:todo_app/data/auth_data.dart';
 
 class SignUP_Screen extends StatefulWidget {
   final VoidCallback show;
-  const SignUP_Screen(this.show, {super.key});
+   SignUP_Screen(this.show, {super.key});
 
   @override
   State<SignUP_Screen> createState() => _SignUP_ScreenState();
@@ -97,6 +97,7 @@ class _SignUP_ScreenState extends State<SignUP_Screen> {
         onTap: () {
           AuthenticationRemote().register(email.text, password.text,
            passwordConfirm.text);
+           Navigator.pushReplacementNamed(context, '/login');
         },
         child: Container(
             alignment: Alignment.center,

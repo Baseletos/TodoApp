@@ -3,7 +3,7 @@ import 'package:todo_app/data/auth_data.dart';
 
 class LogIN_Screen extends StatefulWidget {
   final VoidCallback show;
-  const LogIN_Screen(this.show, {super.key});
+   LogIN_Screen(this.show, {super.key});
 
   @override
   State<LogIN_Screen> createState() => _LogIN_ScreenState();
@@ -17,9 +17,11 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
   final password = TextEditingController();
   @override
   void initstate() {
+    //  super.initState();
     _focusNode1.addListener(() {
       setState(() {});
     });
+    //  super.initState();
     _focusNode2.addListener(() {
       setState(() {});
     });
@@ -66,6 +68,9 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
           const SizedBox(width: 5),
           GestureDetector(
             onTap: widget.show,
+          //   onTap:() {
+          //   Navigator.pushNamed(context, '/sign_up');
+          // },
             child: const Text(
               "Sign UP",
               style: TextStyle(
@@ -86,9 +91,17 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
         horizontal: 100,
       ),
       child: GestureDetector(
-        onTap: () {
-          AuthenticationRemote().login(email.text, password.text);
+        onTap: () async {
+          bool isLoggedIn = await AuthenticationRemote()
+              .login(email.text, password.text);
+          if (isLoggedIn) {
+            Navigator.pushNamed(context, '/todo_list');
+          } else {
+            // Show error message when login fails
+            showFailureMessage(context, 'Invalid email or password');
+          }
         },
+
         child: Container(
             alignment: Alignment.center,
             width: double.infinity,
@@ -164,5 +177,15 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
         //  ),
       ),
     );
+  }
+  void showFailureMessage(BuildContext context, String message) {
+    final snackBar = SnackBar(
+      content: Text(
+        message,
+        style: const TextStyle(color: Colors.white),
+      ),
+      backgroundColor: Colors.red,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }

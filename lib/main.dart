@@ -1,9 +1,10 @@
 // import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:todo_app/auth/main.page.dart';
+import 'package:todo_app/auth/auth_page.dart';
 import 'package:firebase_core/firebase_core.dart';
-// import 'package:todo_app/screens/login.dart';
+import 'package:todo_app/screens/todo_list.dart';
+import 'package:todo_app/screens/login.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,9 +28,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      routes: {
+    '/todo_list': (context) => const TodoListPage(),
+    '/login': (context) => LogIN_Screen(() {}),
+    // '/sign_up': (context) =>  SignUP_Screen(),
+  },
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-      home: const Main_Page(),
+       home: const Auth_Page(),
+    
       // home: LogIN_Screen(
       //   () {}, // Replace with your function
       //   key: Key('login_screen'), // Add a key for the widget

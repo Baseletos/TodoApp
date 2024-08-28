@@ -1,8 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:todo_app/screens/add_page.dart';
 import 'package:todo_app/services/todo_service.dart';
 import 'package:todo_app/widget/todo_card.dart';
+import 'package:todo_app/screens/login.dart';
 
 void showSuccessMessage(context, String message) {
   final snackBar = SnackBar(
@@ -47,45 +47,56 @@ class _TodoListPageState extends State<TodoListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          backgroundColor: const Color.fromARGB(255, 43, 50, 71),
-          title: const Text('Todo List'),
-        ),
-        body: Visibility(
-          visible: isLoading,
-          replacement: RefreshIndicator(
-            onRefresh: fetchTodo,
-            child: Visibility(
-              visible: items.isNotEmpty,
-              replacement: Center(
-                  child: Text(
-                'No Todo item',
-                style: Theme.of(context).textTheme.headlineLarge,
-              )),
-              child: ListView.builder(
-                itemCount: items.length,
-                padding: const EdgeInsets.all(12),
-                itemBuilder: (context, index) {
-                  final item = items[index];
-                  final id = item['_id'] as String;
-                  return TodoCard(
-                    index: index,
-                    deleteById: deleteById,
-                    navigateEdit: navigateToEditPage,
-                    item: item, 
-                    
-                  );
-                },
-              ),
+      appBar: AppBar(
+        centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 43, 50, 71),
+        title: const Text('Todo List'),
+      ),
+      body: Visibility(
+        visible: isLoading,
+        replacement: RefreshIndicator(
+          onRefresh: fetchTodo,
+          child: Visibility(
+            visible: items.isNotEmpty,
+            replacement: Center(
+                child: Text(
+              'No Todo item',
+              style: Theme.of(context).textTheme.headlineLarge,
+            )),
+            child: ListView.builder(
+              itemCount: items.length,
+              padding: const EdgeInsets.all(12),
+              itemBuilder: (context, index) {
+                final item = items[index];
+                final id = item['_id'] as String;
+                return TodoCard(
+                  index: index,
+                  deleteById: deleteById,
+                  navigateEdit: navigateToEditPage,
+                  item: item,
+                );
+              },
             ),
           ),
-          child: const Center(child: CircularProgressIndicator()),
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: navigateToAddPage,
-          label: const Text('+'),
-        ));
+        child: const Center(child: CircularProgressIndicator()),
+      ),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          FloatingActionButton.extended(
+            onPressed: navigateToLoginPage,
+            icon: const Icon(Icons.logout), // Add the logout icon
+            label: const Text(''),
+            backgroundColor: Colors.red,
+          ),
+          FloatingActionButton.extended(
+            onPressed: navigateToAddPage,
+            label: const Text('+'),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> navigateToEditPage(Map item) async {
@@ -106,6 +117,16 @@ class _TodoListPageState extends State<TodoListPage> {
       isLoading = true;
     });
     fetchTodo();
+  }
+
+  Future<void> navigateToLoginPage() async {
+    final route = MaterialPageRoute(builder: (context) => LogIN_Screen(() {}));
+
+    await Navigator.pushAndRemoveUntil(
+      context,
+      route,
+      (Route<dynamic> route) => false,
+    );
   }
 
   Future<void> deleteById(String id) async {
