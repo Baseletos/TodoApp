@@ -3,7 +3,7 @@ import 'package:todo_app/data/auth_data.dart';
 
 class SignUP_Screen extends StatefulWidget {
   final VoidCallback show;
-   SignUP_Screen(this.show, {super.key});
+  const SignUP_Screen(this.show, {super.key});
 
   @override
   State<SignUP_Screen> createState() => _SignUP_ScreenState();
@@ -17,8 +17,11 @@ class _SignUP_ScreenState extends State<SignUP_Screen> {
   final email = TextEditingController();
   final password = TextEditingController();
   final passwordConfirm = TextEditingController();
+  bool _showPassword = false;
+  bool _showConfirmPassword = false;
   @override
   void initstate() {
+    super.initState();
     _focusNode1.addListener(() {
       setState(() {});
     });
@@ -27,6 +30,18 @@ class _SignUP_ScreenState extends State<SignUP_Screen> {
     });
     _focusNode3.addListener(() {
       setState(() {});
+    });
+  }
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _showPassword = !_showPassword;
+    });
+  }
+
+  void _toggleConfirmPasswordVisibility() {
+    setState(() {
+      _showConfirmPassword = !_showConfirmPassword;
     });
   }
 
@@ -42,10 +57,16 @@ class _SignUP_ScreenState extends State<SignUP_Screen> {
             const SizedBox(height: 50),
             textfield(email, _focusNode1, 'Email', Icons.email),
             const SizedBox(height: 20),
-            textfield(password, _focusNode2, 'Password', Icons.key),
+            textfield(password, _focusNode2, 'Password', Icons.key,
+                isPassword: true,
+                showPassword: _showPassword,
+                togglePasswordVisibility: _togglePasswordVisibility),
             const SizedBox(height: 20),
             textfield(
-                passwordConfirm, _focusNode3, 'Confirm Password', Icons.key),
+                passwordConfirm, _focusNode3, 'Confirm Password', Icons.key,
+                isPassword: true,
+                showPassword: _showPassword,
+                togglePasswordVisibility: _togglePasswordVisibility),
             const SizedBox(height: 10),
             account(),
             const SizedBox(height: 40),
@@ -95,9 +116,9 @@ class _SignUP_ScreenState extends State<SignUP_Screen> {
       ),
       child: GestureDetector(
         onTap: () {
-          AuthenticationRemote().register(email.text, password.text,
-           passwordConfirm.text);
-           Navigator.pushReplacementNamed(context, '/login');
+          AuthenticationRemote()
+              .register(email.text, password.text, passwordConfirm.text);
+          Navigator.pushReplacementNamed(context, '/login');
         },
         child: Container(
             alignment: Alignment.center,
@@ -119,7 +140,10 @@ class _SignUP_ScreenState extends State<SignUP_Screen> {
   }
 
   Widget textfield(TextEditingController controller, FocusNode focusNode,
-      String typename, IconData iconss) {
+      String typename, IconData iconss,
+      {bool isPassword = false,
+      bool showPassword = false,
+      VoidCallback? togglePasswordVisibility}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 50),
       child: Container(
@@ -134,6 +158,7 @@ class _SignUP_ScreenState extends State<SignUP_Screen> {
             fontSize: 18,
             color: Colors.white,
           ),
+          obscureText: isPassword && !showPassword,
           decoration: InputDecoration(
             prefixIcon: Icon(iconss),
             contentPadding:
@@ -146,6 +171,18 @@ class _SignUP_ScreenState extends State<SignUP_Screen> {
                 width: 2.0,
               ),
             ),
+            suffixIcon:
+                isPassword // Add show/hide button only for password fields
+                    ? IconButton(
+                        icon: Icon(
+                          showPassword
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors.white,
+                        ),
+                        onPressed: togglePasswordVisibility,
+                      )
+                    : null,
           ),
         ),
       ),

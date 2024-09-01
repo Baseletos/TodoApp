@@ -137,10 +137,11 @@ class _TodoListPageState extends State<TodoListPage> {
         items = filtered;
       });
       showSuccessMessage(context, 'success');
-    } else {
+    } 
+    else {
       showFailureMessage(context, 'Failed to delete');
     }
-  }
+   }
 
   Future<void> fetchTodo() async {
     final response = await TodoService.fetchTodos();

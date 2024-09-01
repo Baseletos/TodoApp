@@ -3,7 +3,7 @@ import 'package:todo_app/data/auth_data.dart';
 
 class LogIN_Screen extends StatefulWidget {
   final VoidCallback show;
-   LogIN_Screen(this.show, {super.key});
+  const LogIN_Screen(this.show, {super.key});
 
   @override
   State<LogIN_Screen> createState() => _LogIN_ScreenState();
@@ -15,15 +15,22 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
 
   final email = TextEditingController();
   final password = TextEditingController();
+  bool _showPassword = false;
   @override
   void initstate() {
-    //  super.initState();
+    super.initState();
     _focusNode1.addListener(() {
       setState(() {});
     });
     //  super.initState();
     _focusNode2.addListener(() {
       setState(() {});
+    });
+  }
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _showPassword = !_showPassword;
     });
   }
 
@@ -39,7 +46,10 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
             const SizedBox(height: 50),
             textfield(email, _focusNode1, 'Email', Icons.email),
             const SizedBox(height: 20),
-            textfield(password, _focusNode2, 'Password', Icons.key),
+            textfield(password, _focusNode2, 'Password', Icons.key,
+                isPassword: true,
+                showPassword: _showPassword,
+                togglePasswordVisibility: _togglePasswordVisibility),
             const SizedBox(height: 10),
             account(),
             const SizedBox(height: 40),
@@ -68,9 +78,9 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
           const SizedBox(width: 5),
           GestureDetector(
             onTap: widget.show,
-          //   onTap:() {
-          //   Navigator.pushNamed(context, '/sign_up');
-          // },
+            //   onTap:() {
+            //   Navigator.pushNamed(context, '/sign_up');
+            // },
             child: const Text(
               "Sign UP",
               style: TextStyle(
@@ -92,8 +102,8 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
       ),
       child: GestureDetector(
         onTap: () async {
-          bool isLoggedIn = await AuthenticationRemote()
-              .login(email.text, password.text);
+          bool isLoggedIn =
+              await AuthenticationRemote().login(email.text, password.text);
           if (isLoggedIn) {
             Navigator.pushNamed(context, '/todo_list');
           } else {
@@ -101,7 +111,6 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
             showFailureMessage(context, 'Invalid email or password');
           }
         },
-
         child: Container(
             alignment: Alignment.center,
             width: double.infinity,
@@ -122,7 +131,10 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
   }
 
   Widget textfield(TextEditingController controller, FocusNode focusNode,
-      String typename, IconData iconss) {
+      String typename, IconData iconss,
+      {bool isPassword = false,
+      bool showPassword = false,
+      VoidCallback? togglePasswordVisibility}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 50),
       child: Container(
@@ -137,6 +149,7 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
             fontSize: 18,
             color: Colors.white,
           ),
+          obscureText: isPassword && !showPassword,
           decoration: InputDecoration(
             prefixIcon: Icon(iconss),
             contentPadding:
@@ -149,6 +162,18 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
                 width: 2.0,
               ),
             ),
+            suffixIcon:
+                isPassword // Add show/hide button only for password fields
+                    ? IconButton(
+                        icon: Icon(
+                          showPassword
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                          color: Colors.white,
+                        ),
+                        onPressed: togglePasswordVisibility,
+                      )
+                    : null,
           ),
         ),
       ),
@@ -178,6 +203,7 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
       ),
     );
   }
+
   void showFailureMessage(BuildContext context, String message) {
     final snackBar = SnackBar(
       content: Text(
