@@ -171,18 +171,15 @@ class _SignUP_ScreenState extends State<SignUP_Screen> {
                 width: 2.0,
               ),
             ),
-            suffixIcon:
-                isPassword // Add show/hide button only for password fields
-                    ? IconButton(
-                        icon: Icon(
-                          showPassword
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: Colors.white,
-                        ),
-                        onPressed: togglePasswordVisibility,
-                      )
-                    : null,
+            suffixIcon: isPassword
+                ? IconButton(
+                    icon: Icon(
+                      showPassword ? Icons.visibility : Icons.visibility_off,
+                      color: Colors.white,
+                    ),
+                    onPressed: togglePasswordVisibility,
+                  )
+                : null,
           ),
         ),
       ),
@@ -203,12 +200,6 @@ class _SignUP_ScreenState extends State<SignUP_Screen> {
             ),
           ),
         ),
-
-        //  decoration: BoxDecoration(
-        //  image: DecorationImage(
-        //    image: AssetImage(''),
-        //    ),
-        //  ),
       ),
     );
   }

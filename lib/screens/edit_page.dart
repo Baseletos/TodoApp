@@ -1,26 +1,35 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/data/firestore.dart';
+import 'package:todo_app/model/todo_model.dart';
 
-class AddTodoPage extends StatefulWidget {
-  const AddTodoPage({super.key});
+class Edit_Screen extends StatefulWidget {
+  final Todo _todo;
+  const Edit_Screen(this._todo, {super.key});
 
   @override
-  State<AddTodoPage> createState() => _AddTodoPageState();
+  State<Edit_Screen> createState() => _Edit_ScreenState();
 }
 
-class _AddTodoPageState extends State<AddTodoPage> {
-  final title = TextEditingController();
-  final subtitle = TextEditingController();
+class _Edit_ScreenState extends State<Edit_Screen> {
+  TextEditingController? title;
+  TextEditingController? subtitle;
 
   final FocusNode _focusNode1 = FocusNode();
   final FocusNode _focusNode2 = FocusNode();
   int indexx = 0;
   @override
+  void initState() {
+    super.initState();
+    title = TextEditingController(text: widget._todo.title);
+    subtitle = TextEditingController(text: widget._todo.subtitle);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 89, 58, 113),
-        title: Text('Add To-Do '),
+        title: Text('Edit To-Do '),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -30,7 +39,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
             const Padding(
               padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               child: Text(
-                'Add your task details below',
+                'Update your task details below',
                 style: TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
@@ -58,18 +67,17 @@ class _AddTodoPageState extends State<AddTodoPage> {
         ElevatedButton(
           style: ElevatedButton.styleFrom(
             minimumSize: const Size(170, 48),
-            backgroundColor: const Color.fromARGB(255, 89, 58, 113),
           ),
           onPressed: () {
-            Firestore_Datasource().AddTodo(subtitle.text, title.text, indexx);
+            Firestore_Datasource().Update_Todo(
+                widget._todo.id, indexx, title!.text, subtitle!.text);
             Navigator.pop(context);
           },
-          child: const Text('Add task'),
+          child: const Text('Update task'),
         ),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
             minimumSize: const Size(170, 48),
-            backgroundColor: const Color.fromARGB(255, 89, 58, 113),
           ),
           onPressed: () {
             Navigator.pop(context);

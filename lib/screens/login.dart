@@ -22,7 +22,6 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
     _focusNode1.addListener(() {
       setState(() {});
     });
-    //  super.initState();
     _focusNode2.addListener(() {
       setState(() {});
     });
@@ -78,9 +77,6 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
           const SizedBox(width: 5),
           GestureDetector(
             onTap: widget.show,
-            //   onTap:() {
-            //   Navigator.pushNamed(context, '/sign_up');
-            // },
             child: const Text(
               "Sign UP",
               style: TextStyle(
@@ -107,7 +103,6 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
           if (isLoggedIn) {
             Navigator.pushNamed(context, '/todo_list');
           } else {
-            // Show error message when login fails
             showFailureMessage(context, 'Invalid email or password');
           }
         },
@@ -162,18 +157,15 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
                 width: 2.0,
               ),
             ),
-            suffixIcon:
-                isPassword // Add show/hide button only for password fields
-                    ? IconButton(
-                        icon: Icon(
-                          showPassword
-                              ? Icons.visibility
-                              : Icons.visibility_off,
-                          color: Colors.white,
-                        ),
-                        onPressed: togglePasswordVisibility,
-                      )
-                    : null,
+            suffixIcon: isPassword
+                ? IconButton(
+                    icon: Icon(
+                      showPassword ? Icons.visibility : Icons.visibility_off,
+                      color: Colors.white,
+                    ),
+                    onPressed: togglePasswordVisibility,
+                  )
+                : null,
           ),
         ),
       ),
@@ -189,17 +181,11 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
         child: Center(
           child: SizedBox(
             child: Text(
-              'Todo App',
+              'To-Do App',
               style: Theme.of(context).textTheme.headlineLarge,
             ),
           ),
         ),
-
-        //  decoration: BoxDecoration(
-        //  image: DecorationImage(
-        //    image: AssetImage(''),
-        //    ),
-        //  ),
       ),
     );
   }
