@@ -109,35 +109,62 @@ class _SignUP_ScreenState extends State<SignUP_Screen> {
     );
   }
 
-  Widget signup_button() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 100,
-      ),
-      child: GestureDetector(
-        onTap: () {
-          AuthenticationRemote()
-              .register(email.text, password.text, passwordConfirm.text);
-          Navigator.pushReplacementNamed(context, '/login');
-        },
-        child: Container(
-            alignment: Alignment.center,
-            width: double.infinity,
-            height: 50,
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 89, 58, 113),
-              borderRadius: BorderRadius.circular(120),
-            ),
-            child: const Text(
-              'Sign Up',
-              style: TextStyle(
-                fontSize: 23,
-                fontWeight: FontWeight.bold,
+Widget signup_button() {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 100),
+    child: GestureDetector(
+      onTap: () async {
+        try {
+          final errorMessage = await AuthenticationRemote().register(
+            email.text,
+            password.text,
+            passwordConfirm.text,
+          );
+
+          if (errorMessage != null) {
+            // Show an error message to the user
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(errorMessage),
+                backgroundColor: Colors.red,
               ),
-            )),
+            );
+            return;
+          }
+
+          Navigator.pushReplacementNamed(
+            context,
+            '/login',
+            arguments: {'successMessage': 'Sign up successful! Please log in.'},
+          );
+        } catch (e) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('An error occurred: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      },
+      child: Container(
+        alignment: Alignment.center,
+        width: double.infinity,
+        height: 50,
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 89, 58, 113),
+          borderRadius: BorderRadius.circular(120),
+        ),
+        child: const Text(
+          'Sign Up',
+          style: TextStyle(
+            fontSize: 23,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget textfield(TextEditingController controller, FocusNode focusNode,
       String typename, IconData iconss,

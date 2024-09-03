@@ -16,8 +16,10 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
   final email = TextEditingController();
   final password = TextEditingController();
   bool _showPassword = false;
+  String? _successMessage;
+
   @override
-  void initstate() {
+  void initState() {
     super.initState();
     _focusNode1.addListener(() {
       setState(() {});
@@ -25,6 +27,17 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
     _focusNode2.addListener(() {
       setState(() {});
     });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final args = ModalRoute.of(context)?.settings.arguments as Map?;
+    if (args != null && args['successMessage'] != null) {
+      setState(() {
+        _successMessage = args['successMessage'];
+      });
+    }
   }
 
   void _togglePasswordVisibility() {
@@ -37,25 +50,40 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-          child: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            Login(context),
-            const SizedBox(height: 50),
-            textfield(email, _focusNode1, 'Email', Icons.email),
-            const SizedBox(height: 20),
-            textfield(password, _focusNode2, 'Password', Icons.key,
-                isPassword: true,
-                showPassword: _showPassword,
-                togglePasswordVisibility: _togglePasswordVisibility),
-            const SizedBox(height: 10),
-            account(),
-            const SizedBox(height: 40),
-            login_button()
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+              Login(context),
+              const SizedBox(height: 20),
+              if (_successMessage != null)
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 50),
+                  child: Text(
+                    _successMessage!,
+                    style: const TextStyle(
+                      color: Colors.green,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              const SizedBox(height: 50),
+              textfield(email, _focusNode1, 'Email', Icons.email),
+              const SizedBox(height: 20),
+              textfield(password, _focusNode2, 'Password', Icons.key,
+                  isPassword: true,
+                  showPassword: _showPassword,
+                  togglePasswordVisibility: _togglePasswordVisibility),
+              const SizedBox(height: 10),
+              account(),
+              const SizedBox(height: 40),
+              login_button(),
+            ],
+          ),
         ),
-      )),
+      ),
     );
   }
 
@@ -98,29 +126,29 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
       ),
       child: GestureDetector(
         onTap: () async {
-          bool isLoggedIn =
-              await AuthenticationRemote().login(email.text, password.text);
-          if (isLoggedIn) {
+          final errorMessage = await AuthenticationRemote().login(email.text, password.text);
+          if (errorMessage == null) {
             Navigator.pushNamed(context, '/todo_list');
           } else {
-            showFailureMessage(context, 'Invalid email or password');
+            showFailureMessage(context, errorMessage);
           }
         },
         child: Container(
-            alignment: Alignment.center,
-            width: double.infinity,
-            height: 50,
-            decoration: BoxDecoration(
-              color: const Color.fromARGB(255, 89, 58, 113),
-              borderRadius: BorderRadius.circular(120),
+          alignment: Alignment.center,
+          width: double.infinity,
+          height: 50,
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 89, 58, 113),
+            borderRadius: BorderRadius.circular(120),
+          ),
+          child: const Text(
+            'Login',
+            style: TextStyle(
+              fontSize: 23,
+              fontWeight: FontWeight.bold,
             ),
-            child: const Text(
-              'Login',
-              style: TextStyle(
-                fontSize: 23,
-                fontWeight: FontWeight.bold,
-              ),
-            )),
+          ),
+        ),
       ),
     );
   }
@@ -193,7 +221,7 @@ class _LogIN_ScreenState extends State<LogIN_Screen> {
   void showFailureMessage(BuildContext context, String message) {
     final snackBar = SnackBar(
       content: Text(
-        message,
+        'Wrong Email or Password',
         style: const TextStyle(color: Colors.white),
       ),
       backgroundColor: Colors.red,
