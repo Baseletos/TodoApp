@@ -20,7 +20,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 89, 58, 113),
-        title: Text('Add To-Do '),
+        title: const Text('Add To-Do '),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -51,34 +51,52 @@ class _AddTodoPageState extends State<AddTodoPage> {
     );
   }
 
-  Widget button() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            minimumSize: const Size(170, 48),
-            backgroundColor: const Color.fromARGB(255, 89, 58, 113),
-          ),
-          onPressed: () {
+Widget button() {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceAround,
+    children: [
+      ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          minimumSize: const Size(170, 48),
+          backgroundColor: const Color.fromARGB(255, 89, 58, 113),
+        ),
+        onPressed: () {
+          if (title.text.isEmpty || subtitle.text.isEmpty) {
+            // Show a snackbar with an error message
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Title and subtitle cannot be empty.'),
+                backgroundColor: Colors.red,
+              ),
+            );
+
+            // Move focus to the empty field
+            if (title.text.isEmpty) {
+              FocusScope.of(context).requestFocus(_focusNode1);
+            } else if (subtitle.text.isEmpty) {
+              FocusScope.of(context).requestFocus(_focusNode2);
+            }
+          } else {
+            // Proceed with adding the task
             Firestore_Datasource().AddTodo(subtitle.text, title.text, indexx);
             Navigator.pop(context);
-          },
-          child: const Text('Add task'),
+          }
+        },
+        child: const Text('Add task'),
+      ),
+      ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          minimumSize: const Size(170, 48),
+          backgroundColor: const Color.fromARGB(255, 89, 58, 113),
         ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            minimumSize: const Size(170, 48),
-            backgroundColor: const Color.fromARGB(255, 89, 58, 113),
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text('Cancel'),
-        ),
-      ],
-    );
-  }
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: const Text('Cancel'),
+      ),
+    ],
+  );
+}
 
   Widget title_widgets() {
     return Padding(

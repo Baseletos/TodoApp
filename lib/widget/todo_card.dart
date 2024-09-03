@@ -122,15 +122,15 @@ class _Task_WidgetState extends State<Task_Widget> {
                                 color: const Color.fromARGB(255, 89, 58, 113),
                                 borderRadius: BorderRadius.circular(18),
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
+                              child: const Padding(
+                                padding: EdgeInsets.symmetric(
                                   horizontal: 12,
                                   vertical: 6,
                                 ),
                                 child: Row(
                                   children: [
-                                    const SizedBox(width: 10),
-                                    const Text(
+                                    SizedBox(width: 10),
+                                    Text(
                                       'edit',
                                       style: TextStyle(
                                         fontSize: 14,

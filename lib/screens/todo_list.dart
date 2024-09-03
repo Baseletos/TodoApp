@@ -21,7 +21,7 @@ class _TodoListPageState extends State<TodoListPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 89, 58, 113),
-        title: Text('To-Do List '),
+        title: const Text('To-Do List '),
         centerTitle: true,
         actions: [
           IconButton(

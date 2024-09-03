@@ -17,11 +17,27 @@ class _Edit_ScreenState extends State<Edit_Screen> {
   final FocusNode _focusNode1 = FocusNode();
   final FocusNode _focusNode2 = FocusNode();
   int indexx = 0;
+
+  // Track if changes are made
+  bool hasChanged = false;
+
   @override
   void initState() {
     super.initState();
     title = TextEditingController(text: widget._todo.title);
     subtitle = TextEditingController(text: widget._todo.subtitle);
+
+    // Add listeners to detect changes
+    title!.addListener(_onTextChanged);
+    subtitle!.addListener(_onTextChanged);
+  }
+
+  // Method to check if text has changed
+  void _onTextChanged() {
+    setState(() {
+      hasChanged = title!.text != widget._todo.title ||
+                   subtitle!.text != widget._todo.subtitle;
+    });
   }
 
   @override
@@ -29,7 +45,7 @@ class _Edit_ScreenState extends State<Edit_Screen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 89, 58, 113),
-        title: Text('Edit To-Do '),
+        title: const Text('Edit To-Do '),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -68,11 +84,11 @@ class _Edit_ScreenState extends State<Edit_Screen> {
           style: ElevatedButton.styleFrom(
             minimumSize: const Size(170, 48),
           ),
-          onPressed: () {
+          onPressed: hasChanged ? () {
             Firestore_Datasource().Update_Todo(
                 widget._todo.id, indexx, title!.text, subtitle!.text);
             Navigator.pop(context);
-          },
+          } : null,  // Disable button if no changes
           child: const Text('Update task'),
         ),
         ElevatedButton(
