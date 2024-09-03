@@ -129,9 +129,10 @@ class _Task_WidgetState extends State<Task_Widget> {
                                 ),
                                 child: Row(
                                   children: [
-                                    SizedBox(width: 10),
+                                    SizedBox(width: 18),
                                     Text(
-                                      'edit',
+                                      'Edit',
+                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         fontSize: 14,
                                         fontWeight: FontWeight.bold,
