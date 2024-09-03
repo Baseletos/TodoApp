@@ -16,12 +16,13 @@ bool show = true;
 
 class _TodoListPageState extends State<TodoListPage> {
   List<Todo> tasks = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 89, 58, 113),
-        title: const Text('To-Do List '),
+        title: const Text('To-Do List'),
         centerTitle: true,
         actions: [
           IconButton(
@@ -60,18 +61,26 @@ class _TodoListPageState extends State<TodoListPage> {
             }
             return true;
           },
-          child: Column(
-            children: [
-              Stream_note(false),
-              Text(
-                'isDone',
-                style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.grey.shade500,
-                    fontWeight: FontWeight.bold),
-              ),
-              Stream_note(true),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                Stream_note(false),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Center(
+                    child: Text(
+                      'Completed Tasks',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey.shade500,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                Stream_note(true),
+              ],
+            ),
           ),
         ),
       ),
